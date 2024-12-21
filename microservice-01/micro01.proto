@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package micro01;
+
+option go_package = "github.com/bw80-machine-task-01/proto-files/microservice-01";
+
+service Micro01 {
+    rpc UserCreate(Details) returns (Empty);
+    rpc UserFetch(Get) returns (Details);
+    rpc UserUpdate(Details) returns (Empty);
+    rpc UserDelete(Get) returns (Empty);
+}
+
+message Details {
+    int32 id = 1;
+    string name = 2;
+    string email = 3;
+}
+
+message Empty {}
+
+message Get {
+    int32 id = 1;
+}

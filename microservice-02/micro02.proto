@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package micro02;
+
+option go_package = "github.com/bw80-machine-task-01/proto-files/microservice-02";
+
+service Micro02 {
+    rpc Method01(Data) returns (Details);
+    rpc Method02(Data) returns (Details);
+}
+
+message Data {
+    string method = 1;
+    int32 waitsec = 2;
+}
+
+message Details {
+    repeated User users = 1;
+}
+
+message User {
+    string name = 1;
+}
