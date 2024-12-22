@@ -5,7 +5,7 @@ package micro01;
 option go_package = "github.com/bw80-machine-task-01/proto-files/microservice-01";
 
 service Micro01 {
-    rpc UserCreate(Details) returns (Empty);
+    rpc UserCreate(Details) returns (Get);
     rpc UserFetch(Get) returns (Details);
     rpc UserUpdate(Details) returns (Empty);
     rpc UserDelete(Get) returns (Empty);

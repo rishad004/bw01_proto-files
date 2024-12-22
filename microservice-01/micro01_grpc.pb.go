@@ -29,7 +29,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type Micro01Client interface {
-	UserCreate(ctx context.Context, in *Details, opts ...grpc.CallOption) (*Empty, error)
+	UserCreate(ctx context.Context, in *Details, opts ...grpc.CallOption) (*Get, error)
 	UserFetch(ctx context.Context, in *Get, opts ...grpc.CallOption) (*Details, error)
 	UserUpdate(ctx context.Context, in *Details, opts ...grpc.CallOption) (*Empty, error)
 	UserDelete(ctx context.Context, in *Get, opts ...grpc.CallOption) (*Empty, error)
@@ -43,9 +43,9 @@ func NewMicro01Client(cc grpc.ClientConnInterface) Micro01Client {
 	return &micro01Client{cc}
 }
 
-func (c *micro01Client) UserCreate(ctx context.Context, in *Details, opts ...grpc.CallOption) (*Empty, error) {
+func (c *micro01Client) UserCreate(ctx context.Context, in *Details, opts ...grpc.CallOption) (*Get, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Empty)
+	out := new(Get)
 	err := c.cc.Invoke(ctx, Micro01_UserCreate_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -87,7 +87,7 @@ func (c *micro01Client) UserDelete(ctx context.Context, in *Get, opts ...grpc.Ca
 // All implementations must embed UnimplementedMicro01Server
 // for forward compatibility.
 type Micro01Server interface {
-	UserCreate(context.Context, *Details) (*Empty, error)
+	UserCreate(context.Context, *Details) (*Get, error)
 	UserFetch(context.Context, *Get) (*Details, error)
 	UserUpdate(context.Context, *Details) (*Empty, error)
 	UserDelete(context.Context, *Get) (*Empty, error)
@@ -101,7 +101,7 @@ type Micro01Server interface {
 // pointer dereference when methods are called.
 type UnimplementedMicro01Server struct{}
 
-func (UnimplementedMicro01Server) UserCreate(context.Context, *Details) (*Empty, error) {
+func (UnimplementedMicro01Server) UserCreate(context.Context, *Details) (*Get, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserCreate not implemented")
 }
 func (UnimplementedMicro01Server) UserFetch(context.Context, *Get) (*Details, error) {
