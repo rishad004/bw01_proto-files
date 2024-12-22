@@ -23,6 +23,7 @@ const (
 	Micro01_UserFetch_FullMethodName  = "/micro01.Micro01/UserFetch"
 	Micro01_UserUpdate_FullMethodName = "/micro01.Micro01/UserUpdate"
 	Micro01_UserDelete_FullMethodName = "/micro01.Micro01/UserDelete"
+	Micro01_FromMethod_FullMethodName = "/micro01.Micro01/FromMethod"
 )
 
 // Micro01Client is the client API for Micro01 service.
@@ -33,6 +34,7 @@ type Micro01Client interface {
 	UserFetch(ctx context.Context, in *Get, opts ...grpc.CallOption) (*Details, error)
 	UserUpdate(ctx context.Context, in *Details, opts ...grpc.CallOption) (*Empty, error)
 	UserDelete(ctx context.Context, in *Get, opts ...grpc.CallOption) (*Empty, error)
+	FromMethod(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Data, error)
 }
 
 type micro01Client struct {
@@ -83,6 +85,16 @@ func (c *micro01Client) UserDelete(ctx context.Context, in *Get, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *micro01Client) FromMethod(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Data, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Data)
+	err := c.cc.Invoke(ctx, Micro01_FromMethod_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Micro01Server is the server API for Micro01 service.
 // All implementations must embed UnimplementedMicro01Server
 // for forward compatibility.
@@ -91,6 +103,7 @@ type Micro01Server interface {
 	UserFetch(context.Context, *Get) (*Details, error)
 	UserUpdate(context.Context, *Details) (*Empty, error)
 	UserDelete(context.Context, *Get) (*Empty, error)
+	FromMethod(context.Context, *Empty) (*Data, error)
 	mustEmbedUnimplementedMicro01Server()
 }
 
@@ -112,6 +125,9 @@ func (UnimplementedMicro01Server) UserUpdate(context.Context, *Details) (*Empty,
 }
 func (UnimplementedMicro01Server) UserDelete(context.Context, *Get) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserDelete not implemented")
+}
+func (UnimplementedMicro01Server) FromMethod(context.Context, *Empty) (*Data, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FromMethod not implemented")
 }
 func (UnimplementedMicro01Server) mustEmbedUnimplementedMicro01Server() {}
 func (UnimplementedMicro01Server) testEmbeddedByValue()                 {}
@@ -206,6 +222,24 @@ func _Micro01_UserDelete_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Micro01_FromMethod_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(Micro01Server).FromMethod(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Micro01_FromMethod_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(Micro01Server).FromMethod(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Micro01_ServiceDesc is the grpc.ServiceDesc for Micro01 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -228,6 +262,10 @@ var Micro01_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserDelete",
 			Handler:    _Micro01_UserDelete_Handler,
+		},
+		{
+			MethodName: "FromMethod",
+			Handler:    _Micro01_FromMethod_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

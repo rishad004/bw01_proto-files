@@ -9,6 +9,7 @@ service Micro01 {
     rpc UserFetch(Get) returns (Details);
     rpc UserUpdate(Details) returns (Empty);
     rpc UserDelete(Get) returns (Empty);
+    rpc FromMethod(Empty) returns (Data);
 }
 
 message Details {
@@ -21,4 +22,8 @@ message Empty {}
 
 message Get {
     int32 id = 1;
+}
+
+message Data {
+    repeated Details users = 1;
 }
